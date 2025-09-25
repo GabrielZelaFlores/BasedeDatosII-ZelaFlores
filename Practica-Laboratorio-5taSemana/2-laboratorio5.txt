@@ -1,0 +1,20 @@
+-- Paso 1.2: Primera transacción básica
+-- 1.2.1 Transferencia bancaria simple
+
+COMMIT;
+-- Ver estado después del commit
+SELECT numero_cuenta, titular, saldo 
+FROM cuentas 
+WHERE numero_cuenta IN ('CTA-001', 'CTA-002');
+
+    -- Transferencia: Juan transfiere $500 a Maria
+    UPDATE cuentas SET saldo = saldo - 500.00 WHERE numero_cuenta = 'CTA-001';
+    UPDATE cuentas SET saldo = saldo + 500.00 WHERE numero_cuenta = 'CTA-002';
+    -- Registrar el movimiento
+    INSERT INTO movimientos (cuenta_origen, cuenta_destino, monto, tipo_operacion, descripcion)
+    VALUES ('CTA-001', 'CTA-002', 500.00, 'TRANSFERENCIA', 'Transferencia entre cuentas');
+    -- Ver estado DESPUÉS del commit
+    SELECT numero_cuenta, titular, saldo FROM cuentas WHERE numero_cuenta IN ('CTA-001', 'CTA-002');
+COMMIT;
+
+-- Pregunta para reflexión: ¿Qué habría pasado si hubiéramos olvidado el COMMIT?
